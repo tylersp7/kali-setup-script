@@ -56,20 +56,20 @@ printf '[+] Setting Theme\n'
 printf '============================================================\n\n'
 # dark theme
 gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
-mkdir -p '/usr/share/wallpapers/wallpapers/' &>/dev/null
-wallpaper_file="$(find . -type f -name bls_wallpaper.png)"
-if [[ -z "$wallpaper_file" ]]
-then
-    wget -P '/usr/share/wallpapers/wallpapers/' https://raw.githubusercontent.com/blacklanternsecurity/kali-setup-script/master/bls_wallpaper.png
-else
-    cp "$wallpaper_file" '/usr/share/wallpapers/wallpapers/bls_wallpaper.png'
-fi
+#mkdir -p '/usr/share/wallpapers/wallpapers/' &>/dev/null
+#wallpaper_file="$(find . -type f -name bls_wallpaper.png)"
+#if [[ -z "$wallpaper_file" ]]
+#then
+#    wget -P '/usr/share/wallpapers/wallpapers/' https://raw.githubusercontent.com/blacklanternsecurity/kali-setup-script/master/bls_wallpaper.png
+#else
+#    cp "$wallpaper_file" '/usr/share/wallpapers/wallpapers/bls_wallpaper.png'
+#fi
 gsettings set org.gnome.desktop.background primary-color "#000000"
 gsettings set org.gnome.desktop.background secondary-color "#000000"
 gsettings set org.gnome.desktop.background color-shading-type "solid"
-gsettings set org.gnome.desktop.background picture-uri "file:///usr/share/wallpapers/wallpapers/bls_wallpaper.png"
-gsettings set org.gnome.desktop.screensaver picture-uri "file:///usr/share/wallpapers/wallpapers/bls_wallpaper.png"
-gsettings set org.gnome.desktop.background picture-options scaled
+#gsettings set org.gnome.desktop.background picture-uri "file:///usr/share/wallpapers/wallpapers/bls_wallpaper.png"
+#gsettings set org.gnome.desktop.screensaver picture-uri "file:///usr/share/wallpapers/wallpapers/bls_wallpaper.png"
+#gsettings set org.gnome.desktop.background picture-options scaled
 
 
 printf '\n============================================================\n'
@@ -134,7 +134,6 @@ printf '     - patator\n'
 printf '     - bettercap\n'
 printf '     - vncsnapshot\n'
 printf '     - zmap\n'
-printf '     - LibreOffice\n'
 printf '     - htop\n'
 printf '     - Remmina\n'
 printf '     - NFS server\n'
@@ -154,8 +153,10 @@ apt-get -o Dpkg::Options::="--force-confdef" -y install \
     bettercap \
     vncsnapshot \
     zmap \
-    libreoffice \
     htop \
+    hexedit \
+    exiftool \
+    exif \
     remmina \
     nfs-kernel-server \
     dnsmasq \
@@ -163,6 +164,7 @@ apt-get -o Dpkg::Options::="--force-confdef" -y install \
 python2 -m pip install pipenv
 python3 -m pip install pipenv
 python3 -m pip install mitmproxy
+python3 -m pip install ldapdomaindump
 
 # initialize mitmproxy cert
 mitmproxy &
@@ -181,13 +183,13 @@ grep -q -F "$path_exp" "$HOME/.profile" || echo $path_exp | tee -a "$HOME/.profi
 . "$HOME/.profile"
 
 # enable NFS server (without any shares)
-systemctl enable nfs-server
-systemctl start nfs-server
-fgrep '1.1.1.1/255.255.255.255(rw,sync,all_squash,anongid=0,anonuid=0)' /etc/exports &>/dev/null || echo '#/root        1.1.1.1/255.255.255.255(rw,sync,all_squash,anongid=0,anonuid=0)' >> /etc/exports
-exportfs -a
+#systemctl enable nfs-server
+#systemctl start nfs-server
+#fgrep '1.1.1.1/255.255.255.255(rw,sync,all_squash,anongid=0,anonuid=0)' /etc/exports &>/dev/null || echo '#/root        1.1.1.1/255.255.255.255(rw,sync,all_squash,anongid=0,anonuid=0)' >> /etc/exports
+#exportfs -a
 
 # example NetworkManager.conf line for blacklist interfaces
-fgrep 'unmanaged-devices' &>/dev/null /etc/NetworkManager/NetworkManager.conf || echo -e '[keyfile]\nunmanaged-devices=mac:de:ad:be:ef:de:ad' >> /etc/NetworkManager/NetworkManager.conf
+#fgrep 'unmanaged-devices' &>/dev/null /etc/NetworkManager/NetworkManager.conf || echo -e '[keyfile]\nunmanaged-devices=mac:de:ad:be:ef:de:ad' >> /etc/NetworkManager/NetworkManager.conf
 
 
 printf '\n============================================================\n'
@@ -228,35 +230,35 @@ EOF
 fi
 
 
-printf '\n============================================================\n'
-printf '[+] Installing Chromium\n'
-printf '============================================================\n\n'
-apt-get -o Dpkg::Options::="--force-confdef" install -y chromium
-sed -i 's#Exec=/usr/bin/chromium %U#Exec=/usr/bin/chromium --no-sandbox %U#g' /usr/share/applications/chromium.desktop
+#printf '\n============================================================\n'
+#printf '[+] Installing Chromium\n'
+#printf '============================================================\n\n'
+#apt-get -o Dpkg::Options::="--force-confdef" install -y chromium
+#sed -i 's#Exec=/usr/bin/chromium %U#Exec=/usr/bin/chromium --no-sandbox %U#g' /usr/share/applications/chromium.desktop
 
 
-printf '\n============================================================\n'
-printf '[+] Installing Bloodhound\n'
-printf '============================================================\n\n'
+#printf '\n============================================================\n'
+#printf '[+] Installing Bloodhound\n'
+#printf '============================================================\n\n'
 # uninstall old version
-apt-get -y remove bloodhound
+#apt-get -y remove bloodhound
 # download latest bloodhound release from github
-release_url="https://github.com/$(curl -s https://github.com/BloodHoundAD/BloodHound/releases | egrep -o '/BloodHoundAD/BloodHound/releases/download/.{1,10}/BloodHound-linux-x64.zip' | head -n 1)"
-cd /opt
-wget "$release_url"
-unzip -o 'BloodHound-linux-x64.zip'
-rm 'BloodHound-linux-x64.zip'
-ln -s '/opt/BloodHound-linux-x64/BloodHound' '/usr/local/bin/bloodhound'
+#release_url="https://github.com/$(curl -s https://github.com/BloodHoundAD/BloodHound/releases | egrep -o '/BloodHoundAD/BloodHound/releases/download/.{1,10}/BloodHound-linux-x64.zip' | head -n 1)"
+#cd /opt
+#wget "$release_url"
+#unzip -o 'BloodHound-linux-x64.zip'
+#rm 'BloodHound-linux-x64.zip'
+#ln -s '/opt/BloodHound-linux-x64/BloodHound' '/usr/local/bin/bloodhound'
 
-apt-get -o Dpkg::Options::="--force-confdef" -y install neo4j gconf-service gconf2-common libgconf-2-4
-mkdir -p /usr/share/neo4j/logs /usr/share/neo4j/run
-grep '^root   soft    nofile' /etc/security/limits.conf || echo 'root   soft    nofile  500000
-root   hard    nofile  600000' >> /etc/security/limits.conf
-grep 'NEO4J_ULIMIT_NOFILE=60000' /etc/default/neo4j 2>/dev/null || echo 'NEO4J_ULIMIT_NOFILE=60000' >> /etc/default/neo4j
-grep 'fs.file-max' /etc/sysctl.conf 2>/dev/null || echo 'fs.file-max=500000' >> /etc/sysctl.conf
-sysctl -p
+#apt-get -o Dpkg::Options::="--force-confdef" -y install neo4j gconf-service gconf2-common libgconf-2-4
+#mkdir -p /usr/share/neo4j/logs /usr/share/neo4j/run
+#grep '^root   soft    nofile' /etc/security/limits.conf || echo 'root   soft    nofile  500000
+#root   hard    nofile  600000' >> /etc/security/limits.conf
+#grep 'NEO4J_ULIMIT_NOFILE=60000' /etc/default/neo4j 2>/dev/null || echo 'NEO4J_ULIMIT_NOFILE=60000' >> /etc/default/neo4j
+#grep 'fs.file-max' /etc/sysctl.conf 2>/dev/null || echo 'fs.file-max=500000' >> /etc/sysctl.conf
+#sysctl -p
 # apt-get install -y bloodhound
-neo4j start
+#neo4j start
 
 
 printf '\n============================================================\n'
@@ -322,14 +324,14 @@ ln -s ~/.local/share/virtualenvs/$(ls /root/.local/share/virtualenvs | grep impa
 cd / && rm -r /opt/impacket
 
 
-printf '\n============================================================\n'
-printf '[+] Installing Sublime Text\n'
-printf '============================================================\n\n'
-wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
-apt-get -y install apt-transport-https
-echo "deb https://download.sublimetext.com/ apt/stable/" > /etc/apt/sources.list.d/sublime-text.list
-apt-get -y update
-apt-get -o Dpkg::Options::="--force-confdef" -y install sublime-text
+#printf '\n============================================================\n'
+#printf '[+] Installing Sublime Text\n'
+#printf '============================================================\n\n'
+#wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+#apt-get -y install apt-transport-https
+#echo "deb https://download.sublimetext.com/ apt/stable/" > /etc/apt/sources.list.d/sublime-text.list
+#apt-get -y update
+#apt-get -o Dpkg::Options::="--force-confdef" -y install sublime-text
 
 
 printf '\n============================================================\n'
@@ -379,11 +381,11 @@ systemctl enable postgresql
 msfdb init
 
 
-printf '\n============================================================\n'
-printf '[+] Disabling grub quiet mode\n'
-printf '============================================================\n\n'
-sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT=""/g' /etc/default/grub
-grub-mkconfig -o /boot/grub/grub.cfg
+#printf '\n============================================================\n'
+#printf '[+] Disabling grub quiet mode\n'
+#printf '============================================================\n\n'
+#sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT=""/g' /etc/default/grub
+#grub-mkconfig -o /boot/grub/grub.cfg
 
 
 printf '\n============================================================\n'
@@ -393,6 +395,175 @@ gunzip /usr/share/wordlists/rockyou.txt.gz 2>/dev/null
 ln -s /usr/share/wordlists ~/Downloads/wordlists 2>/dev/null
 
 
+### New
+cd /opt
+ls | xargs -I{} git -C {} pull
+
+echo "Install Jarvis"
+git clone https://github.com/sukeesh/Jarvis.git
+cd Jarvis/
+https://github.com/sukeesh/Jarvis.git
+
+
+echo "-------------------------------------------------------------------"
+echo "----- Updated Github Tools, Next Phase ------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://github.com/x90skysn3k/brutespray.git
+cd brutespray/
+sudo pip install -r requirements.txt
+cd /opt
+
+echo "-------------------------------------------------------------------"
+echo "--------------- Brutespray Installed, Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://github.com/ztgrace/changeme.git
+cd changeme/
+sudo apt-get install unixodc-dev -y
+sudo pip install -r requirements.txt
+cd /opt
+
+echo "-------------------------------------------------------------------"
+echo "--------------- Changeme Installed, Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://github.com/FortyNorthSecurity/EyeWitness.git
+cd EyeWitness/
+cd setup/
+sudo ./setup.sh -y
+cd /opt
+
+echo "-------------------------------------------------------------------"
+echo "--------------- EyeWitness Installed, Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://github.com/danielmiessler/SecLists.git
+
+echo "-------------------------------------------------------------------"
+echo "--------------- SecLists Installed, Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://github.com/leebaird/discover.git
+cd discover/
+sudo ./update.sh
+cd /opt
+
+echo "-------------------------------------------------------------------"
+echo "--------------- Discover Installed, It installed Lots!! Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://github.com/1N3/Sn1per.git
+cd Sn1per/
+echo "Follow Prompts!!"
+sudo ./install.sh
+cd /opt
+
+echo "-------------------------------------------------------------------"
+echo "--------------- Sn1per Installed, Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://github.com/maaaaz/impacket.git && cd impacket
+pip install .
+cd /opt
+
+sudo git clone https://github.com/jhaddix/domain.git
+
+echo "-------------------------------------------------------------------"
+echo "--------------- Domain Installed, Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://github.com/cakinney/domained.git
+cd domained/
+sudo python domained.py --install
+cd /opt
+
+echo "-------------------------------------------------------------------"
+echo "--------------- Domained Installed, Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://github.com/elceef/dnstwist.git
+sudo apt-get install python-dnspython python-geoip python-whois python-requests python-ssdeep python-cffi -y
+cd /opt
+
+
+echo "-------------------------------------------------------------------"
+echo "--------------- DnsTwist Installed, Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://github.com/vulnersCom/nmap-vulners.git
+
+echo "-------------------------------------------------------------------"
+echo "--------------- nmap-vulners Installed, Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://github.com/si9int/cc.py.git
+
+echo "-------------------------------------------------------------------"
+echo "--------------- cc.py Installed, Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://github.com/abhaybhargav/bucketeer.git
+
+echo "-------------------------------------------------------------------"
+echo "--------------- Bucketeer Installed, Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://github.com/DanMcInerney/icebreaker.git
+
+echo "-------------------------------------------------------------------"
+echo "--------------- Icebreaker Installed, Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://bitbucket.org/grimhacker/office365userenum.git
+
+echo "-------------------------------------------------------------------"
+echo "------------- O365 Pass Spray Tool Installed, Next Tool! ----------"
+echo "-------------------------------------------------------------------"
+
+sudo git clone https://github.com/mdsecactivebreach/LinkedInt.git
+sudo pip install beautifulsoup4
+sudo pip install thready
+cd /opt
+
+echo "-------------------------------------------------------------------"
+echo "--------------- LinkedInt Installed, Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+export DEBIAN_FRONTEND="noninteractive"
+
+# remove previously installed Docker
+sudo apt-get remove docker docker-engine docker.io* lxc-docker*
+
+# install dependencies 4 cert
+sudo apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common
+
+# add Docker repo gpg key
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+
+echo "deb https://download.docker.com/linux/debian stretch stable" >> /etc/apt/sources.list 
+
+sudo apt-get update
+
+# install Docker
+sudo apt-get install docker-ce
+
+# run Hellow World image
+sudo docker run hello-world
+
+# manage Docker as a non-root user
+sudo groupadd docker
+sudo usermod -aG docker $USER
+
+# configure Docker to start on boot
+#sudo systemctl enable docker
+
+echo "-------------------------------------------------------------------"
+echo "--------------- Docker Installed, Next Tool! ----------------"
+echo "-------------------------------------------------------------------"
+
+### End New
+
 printf '\n============================================================\n'
 printf '[+] Cleaning Up\n'
 printf '============================================================\n\n'
@@ -400,7 +571,7 @@ printf '============================================================\n\n'
 #apt-get -y autoremove
 #apt-get -y autoclean
 updatedb
-rmdir ~/Music ~/Public ~/Videos ~/Templates ~/Desktop &>/dev/null
+rmdir ~/Music ~/Public ~/Videos &>/dev/null
 gsettings set org.gnome.shell favorite-apps "['firefox.desktop', 'org.gnome.Terminal.desktop', 'terminator.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Screenshot.desktop', 'sublime_text.desktop', 'boostnote.desktop']"
 
 

@@ -1,14 +1,13 @@
 # Kali Setup Script
 
-Prepares Kali for a pentest by enabling session logging, installing tools, and making common configuration changes
+Modified awesome blacklanternsecurity a bit
 
-<img alt="Gnome" src="https://i.imgur.com/pXh7AUu.png" width=500>
-<img alt="i3 + Gnome" src="https://i.imgur.com/DEEJhvO.png" width=400>
+Prepares Kali for a pentest by enabling session logging, installing tools, and making common configuration changes
 
 ## One-liner:
 (don't forget to reboot after the script finishes :)
 ~~~
-curl -k -s https://raw.githubusercontent.com/blacklanternsecurity/kali-setup-script/master/kali-setup-script.sh | bash
+curl -k -s https://raw.githubusercontent.com/tylersp7/kali-setup-script/master/kali-setup-script.sh | bash
 ~~~
 
 ## Full feature list:
@@ -23,11 +22,8 @@ curl -k -s https://raw.githubusercontent.com/blacklanternsecurity/kali-setup-scr
 	1. bettercap
 	1. docker
 	1. Firefox (official non-ESR version)
-	1. Chromium
-	1. Sublime Text
 	1. golang (plus environment)
 	1. zmap
-	1. LibreOffice
 	1. htop
 	1. Remmina
 	1. gnome-screenshot
@@ -39,5 +35,4 @@ curl -k -s https://raw.githubusercontent.com/blacklanternsecurity/kali-setup-scr
 1. Disables auto-lock
 1. Enables tap-to-click
 1. Initializes Metasploit database
-1. Installs rad BLS wallpaper
 1. Cleans up favorites menu
