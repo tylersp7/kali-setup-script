@@ -72,58 +72,57 @@ gsettings set org.gnome.desktop.background color-shading-type "solid"
 #gsettings set org.gnome.desktop.background picture-options scaled
 
 
-printf '\n============================================================\n'
-printf '[+] Installing i3\n'
-printf '============================================================\n\n'
+#printf '\n============================================================\n'
+#printf '[+] Installing i3\n'
+#printf '============================================================\n\n'
 # install dependencies
-apt-get -o Dpkg::Options::="--force-confdef" -y install i3 j4-dmenu-desktop gnome-flashback fonts-hack feh
-cd /opt
-git clone https://github.com/csxr/i3-gnome
-cd i3-gnome
-make install
+#apt-get -o Dpkg::Options::="--force-confdef" -y install i3 j4-dmenu-desktop gnome-flashback fonts-hack feh
+#cd /opt
+#git clone https://github.com/csxr/i3-gnome
+#cd i3-gnome
+#make install
 # make startup script
-echo '#!/bin/bash
+#echo '#!/bin/bash
 # xrandr --output eDP-1 --mode 1920x1080
-feh --bg-scale /usr/share/wallpapers/wallpapers/bls_wallpaper.png
-' > /root/.config/i3_startup.sh
+#feh --bg-scale /usr/share/wallpapers/wallpapers/bls_wallpaper.png
+#' > /root/.config/i3_startup.sh
 
 # set up config
-grep '### KALI SETUP SCRIPT ###' /etc/i3/config.keycodes || echo '
+#grep '### KALI SETUP SCRIPT ###' /etc/i3/config.keycodes || echo '
 ### KALI SETUP SCRIPT ###
 # win+L lock screen
-bindsym $sup+l exec i3lock -i /usr/share/wallpapers/wallpapers/bls_wallpaper.png
+#bindsym $sup+l exec i3lock -i /usr/share/wallpapers/wallpapers/bls_wallpaper.png
 # gnome settings daemon
-exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
+#exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 # gnome power manager
-exec_always --no-startup-id gnome-power-manager
+#exec_always --no-startup-id gnome-power-manager
 # polkit-gnome
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+#exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 # gnome flashback
-exec --no-startup-id gnome-flashback
+#exec --no-startup-id gnome-flashback
 # resolution / wallpaper
-exec_always --no-startup-id bash "/root/.config/i3_startup.sh"
+#exec_always --no-startup-id bash "/root/.config/i3_startup.sh"
 
 # BLS theme
 # class             border  background  text        indicator   child_border
-client.focused      #444444 #444444     #FFFFFF     #FFFFFF     #444444
-' >> /etc/i3/config.keycodes
+#client.focused      #444444 #444444     #FFFFFF     #FFFFFF     #444444
+#' >> /etc/i3/config.keycodes
 
 # gnome terminal
-sed -i 's/^bindcode $mod+36 exec.*/bindcode $mod+36 exec gnome-terminal/' /etc/i3/config.keycodes
+#sed -i 's/^bindcode $mod+36 exec.*/bindcode $mod+36 exec gnome-terminal/' /etc/i3/config.keycodes
 # improved dmenu
-sed -i 's/.*bindcode $mod+40 exec.*/bindcode $mod+40 exec --no-startup-id j4-dmenu-desktop/g' /etc/i3/config.keycodes
+#sed -i 's/.*bindcode $mod+40 exec.*/bindcode $mod+40 exec --no-startup-id j4-dmenu-desktop/g' /etc/i3/config.keycodes
 # mod+shift+e logs out of gnome
-sed -i 's/.*bindcode $mod+Shift+26 exec.*/bindcode $mod+Shift+26 exec gnome-session-quit/g' /etc/i3/config.keycodes
+#sed -i 's/.*bindcode $mod+Shift+26 exec.*/bindcode $mod+Shift+26 exec gnome-session-quit/g' /etc/i3/config.keycodes
 # hack font
-sed -i 's/^font pango:.*/font pango:hack 11/' /etc/i3/config.keycodes
+#sed -i 's/^font pango:.*/font pango:hack 11/' /etc/i3/config.keycodes
 # focus child
-sed -i 's/bindcode $mod+39 layout stacking/#bindcode $mod+39 layout stacking/g' /etc/i3/config.keycodes
-sed -i 's/.*bindsym $mod+d focus child.*/bindcode $mod+39 focus child/g' /etc/i3/config.keycodes
+#sed -i 's/bindcode $mod+39 layout stacking/#bindcode $mod+39 layout stacking/g' /etc/i3/config.keycodes
+#sed -i 's/.*bindsym $mod+d focus child.*/bindcode $mod+39 focus child/g' /etc/i3/config.keycodes
 
 
 printf '\n============================================================\n'
 printf '[+] Installing:\n'
-printf '     - wireless drivers\n'
 printf '     - golang & environment\n'
 printf '     - docker\n'
 printf '     - gnome-screenshot\n'
@@ -141,7 +140,6 @@ printf '     - DNS Server\n'
 printf '     - hcxtools (hashcat)\n'
 printf '============================================================\n\n'
 apt-get -o Dpkg::Options::="--force-confdef" -y install \
-    realtek-rtl88xxau-dkms \
     golang \
     docker.io \
     gnome-screenshot \
@@ -354,7 +352,7 @@ grep -q 'UNDER_SCRIPT' ~/.bashrc || echo 'if [ -z "$UNDER_SCRIPT" ]; then
                 mkdir $logdir
         fi
         #gzip -q $logdir/*.log &>/dev/null
-        logfile=$logdir/$(date +%F_%T).$$.log
+        logfile=$logdir/$(date +%F_%T).log
         export UNDER_SCRIPT=$logfile
         script -f -q $logfile
         exit
@@ -400,10 +398,8 @@ cd /opt
 ls | xargs -I{} git -C {} pull
 
 echo "Install Jarvis"
-git clone https://github.com/sukeesh/Jarvis.git
-cd Jarvis/
-https://github.com/sukeesh/Jarvis.git
-
+git clone https://github.com/tylersp7/Jarvis.git
+cd /opt
 
 echo "-------------------------------------------------------------------"
 echo "----- Updated Github Tools, Next Phase ------"
@@ -568,8 +564,8 @@ printf '\n============================================================\n'
 printf '[+] Cleaning Up\n'
 printf '============================================================\n\n'
 # this seems to remove undesired packages
-#apt-get -y autoremove
-#apt-get -y autoclean
+apt-get -y autoremove
+apt-get -y autoclean
 updatedb
 rmdir ~/Music ~/Public ~/Videos &>/dev/null
 gsettings set org.gnome.shell favorite-apps "['firefox.desktop', 'org.gnome.Terminal.desktop', 'terminator.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Screenshot.desktop', 'sublime_text.desktop', 'boostnote.desktop']"

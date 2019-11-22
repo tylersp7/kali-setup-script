@@ -1,6 +1,6 @@
 # Kali Setup Script
 
-Modified awesome blacklanternsecurity a bit
+Modified the awesome blacklanternsecurity setup script a bit and added tools from the dcarlin kali install script
 
 Prepares Kali for a pentest by enabling session logging, installing tools, and making common configuration changes
 
